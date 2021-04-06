@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 
 import authConfig from '../../../../config/auth'
+import { AppError } from '../../../../shared/errors/AppError'
 import { User } from '../../entities/User'
 import { InMemoryUsersRepository } from '../../repositories/in-memory/InMemoryUsersRepository'
 import { CreateUserUseCase } from '../createUser/CreateUserUseCase'
@@ -50,5 +51,15 @@ describe('Authenticate User Use Case', () => {
     expect(decodedToken.user).toHaveProperty('password')
     expect(decodedToken.user.name).toEqual(userData.name)
     expect(decodedToken.user.email).toEqual(userData.email)
+  })
+
+  it('should not be able to init a new session if it user not exists', async () => {
+    await expect(
+      async () =>
+        await authenticateUserUseCase.execute({
+          email: userData.email,
+          password: userData.password
+        })
+    ).rejects.toBeInstanceOf(AppError)
   })
 })
