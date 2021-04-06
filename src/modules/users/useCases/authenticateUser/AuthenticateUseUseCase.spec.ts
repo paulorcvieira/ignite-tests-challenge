@@ -62,4 +62,21 @@ describe('Authenticate User Use Case', () => {
         })
     ).rejects.toBeInstanceOf(AppError)
   })
+
+  it('should not be able to init a new session if incorrect password', async () => {
+    await createUserUseCase.execute(userData)
+
+    await authenticateUserUseCase.execute({
+      email: userData.email,
+      password: userData.password
+    })
+
+    await expect(
+      async () =>
+        await authenticateUserUseCase.execute({
+          email: userData.email,
+          password: userData.password + '-incorrect'
+        })
+    ).rejects.toBeInstanceOf(AppError)
+  })
 })
