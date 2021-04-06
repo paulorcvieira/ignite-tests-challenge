@@ -5,46 +5,46 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn
-} from 'typeorm';
-import { v4 as uuid } from 'uuid';
+} from 'typeorm'
+import { v4 as uuid } from 'uuid'
 
-import { User } from '../../users/entities/User';
+import { User } from '../../users/entities/User'
 
 enum OperationType {
   DEPOSIT = 'deposit',
-  WITHDRAW = 'withdraw',
+  WITHDRAW = 'withdraw'
 }
 
 @Entity('statements')
 export class Statement {
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id?: string
 
   @Column('uuid')
-  user_id: string;
+  user_id: string
 
   @ManyToOne(() => User, user => user.statement)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: User
 
   @Column()
-  description: string;
+  description: string
 
   @Column('decimal', { precision: 5, scale: 2 })
-  amount: number;
+  amount: number
 
   @Column({ type: 'enum', enum: OperationType })
-  type: OperationType;
+  type: OperationType
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at: Date
 
   @CreateDateColumn()
-  updated_at: Date;
+  updated_at: Date
 
   constructor() {
     if (!this.id) {
-      this.id = uuid();
+      this.id = uuid()
     }
   }
 }

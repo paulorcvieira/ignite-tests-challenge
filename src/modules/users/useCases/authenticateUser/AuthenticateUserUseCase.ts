@@ -1,44 +1,46 @@
-import { inject, injectable } from "tsyringe";
-import { compare } from 'bcryptjs';
-import { sign } from 'jsonwebtoken';
+import { compare } from 'bcryptjs'
+import { sign } from 'jsonwebtoken'
+import { inject, injectable } from 'tsyringe'
 
-import authConfig from '../../../../config/auth';
-
-import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { IAuthenticateUserResponseDTO } from "./IAuthenticateUserResponseDTO";
-import { IncorrectEmailOrPasswordError } from "./IncorrectEmailOrPasswordError";
+import authConfig from '../../../../config/auth'
+import { IUsersRepository } from '../../repositories/IUsersRepository'
+import { IAuthenticateUserResponseDTO } from './IAuthenticateUserResponseDTO'
+import { IncorrectEmailOrPasswordError } from './IncorrectEmailOrPasswordError'
 
 interface IRequest {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 @injectable()
 export class AuthenticateUserUseCase {
   constructor(
     @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
+    private usersRepository: IUsersRepository
   ) {}
 
-  async execute({ email, password }: IRequest): Promise<IAuthenticateUserResponseDTO> {
-    const user = await this.usersRepository.findByEmail(email);
+  async execute({
+    email,
+    password
+  }: IRequest): Promise<IAuthenticateUserResponseDTO> {
+    const user = await this.usersRepository.findByEmail(email)
 
-    if(!user) {
-      throw new IncorrectEmailOrPasswordError();
+    if (!user) {
+      throw new IncorrectEmailOrPasswordError()
     }
 
-    const passwordMatch = await compare(password, user.password);
+    const passwordMatch = await compare(password, user.password)
 
     if (!passwordMatch) {
-      throw new IncorrectEmailOrPasswordError();
+      throw new IncorrectEmailOrPasswordError()
     }
 
-    const { secret, expiresIn } = authConfig.jwt;
+    const { secret, expiresIn } = authConfig.jwt
 
     const token = sign({ user }, secret, {
       subject: user.id,
-      expiresIn,
-    });
+      expiresIn
+    })
 
     return {
       user: {

@@ -1,4 +1,4 @@
 export interface IGetStatementOperationDTO {
-  user_id: string;
-  statement_id: string;
+  user_id: string
+  statement_id: string
 }
