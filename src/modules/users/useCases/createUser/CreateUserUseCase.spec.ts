@@ -28,7 +28,7 @@ describe('Create User Use Case', () => {
     expect(user.password).not.toEqual(userData.password)
   })
 
-  it('should not be able to create a user if it exists', async () => {
+  it('should not be able to create a user if it exists ', async () => {
     await createUserUseCase.execute(userData)
 
     await expect(async () => {
